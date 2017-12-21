@@ -1,0 +1,15 @@
+{
+    "name": "guillen/tunaweb",
+    "description": "Structure of a basic web page for designers.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luis Guillen",
+            "email": "luisguillen200592@gmail.com"
+        }
+    ],
+    "require": {
+        "phroute/phroute": "^2.1"
+    }
+}
