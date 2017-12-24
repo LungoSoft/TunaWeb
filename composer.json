@@ -1,5 +1,5 @@
 {
-    "name": "guillen/tunaweb",
+    "name": "lungosoft/tunaweb",
     "description": "Structure of a basic web page for designers.",
     "type": "project",
     "license": "MIT",
@@ -13,7 +13,7 @@
         "php": ">=5.6.4",
         "phroute/phroute": "^2.1"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Tuna\\": "app"
