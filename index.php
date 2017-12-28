@@ -18,8 +18,7 @@ foreach($routes as $key => $route)
 
 try
 {
-    SendEmail::$email = 'luis.guillen@lungosoft.com';
-    SendEmail::send('luisguillen200592@gmail.com', 'Prueba de correo', 'Mensaje de contenido');
+    SendEmail::$config = include 'config/mail.php';
 }
 catch(Exception $e)
 {
