@@ -3,6 +3,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
+use Tuna\Email\SendEmail;
 
 $router = new RouteCollector();
 
@@ -13,6 +14,15 @@ foreach($routes as $key => $route)
     $router->get($key, function() use ($route){
         include 'views/'.$route;
     });
+}
+
+try
+{
+    SendEmail::$config = include 'config/mail.php';
+}
+catch(Exception $e)
+{
+    echo 'Mailer Error: ' . $e->getMessage();
 }
 
 try
