@@ -23,6 +23,32 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <h1>Manda un correo</h1>
+                <form action="/sendemail" method="POST" class="row">
+                    <div class="col-md-12">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="correo">Correo</label>
+                        <input type="text" name="correo" id="correo" class="form-control" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="asunto">Asunto</label>
+                        <input type="text" name="asunto" id="asunto" class="form-control" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="mensaje">Mensaje</label>
+                        <textarea name="mensaje" id="mensaje" class="form-control" required></textarea>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <input type="submit" class="btn btn-primary" value="Enviar">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade bs-example-modal-lg" id="mymodal" tabindex="-1" role="dialog">
