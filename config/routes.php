@@ -1,5 +1,12 @@
 <?php
 
 return [
-    '/' => 'principal.html'
+    'views' => [
+        '/' => 'principal.html',
+    ],
+
+    'controllers' => [
+        '/sendemail' => 'SendEmailController',
+    ],
+
 ];

@@ -9,11 +9,15 @@ $router = new RouteCollector();
 
 $routes = include 'config/routes.php';
 
-foreach($routes as $key => $route)
+foreach($routes['views'] as $key => $route)
 {
     $router->get($key, function() use ($route){
         include 'views/'.$route;
     });
+}
+foreach($routes['controllers'] as $key => $controller)
+{
+    $router->controller($key, 'Tuna\\Http\\Controllers\\'.$controller);
 }
 
 try
