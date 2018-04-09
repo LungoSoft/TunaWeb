@@ -13,9 +13,12 @@ class SendEmail
     {
         $mail = new PHPMailer(true);
 
+        $mail->addCustomHeader('Content-Type: text/html; charset=UTF-8');
+        $mail->CharSet = 'UTF-8';
+
         //Server settings
         $mail->SMTPDebug = SendEmail::$config['debug'];
-        $mail->isSMTP();
+        //$mail->isSMTP();
         $mail->Host = SendEmail::$config['host'];
         $mail->SMTPAuth = SendEmail::$config['smtp_auth'];                              // Enable SMTP authentication
         $mail->Username = SendEmail::$config['username'];                 // SMTP username
@@ -24,7 +27,10 @@ class SendEmail
         $mail->Port = SendEmail::$config['port'];                                  // TCP port to connect to
 
         //Recipients
-        $mail->setFrom(SendEmail::$config['email']);
+        if($nombre)
+            $mail->setFrom(SendEmail::$config['email'], $nombre);
+        else
+            $mail->setFrom(SendEmail::$config['email']);
         $mail->addAddress($to);     // Add a recipient
 
         //Content
