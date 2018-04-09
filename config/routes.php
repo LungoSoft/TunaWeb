@@ -2,11 +2,11 @@
 
 return [
     'views' => [
-        '/' => 'principal.html',
+        '/' => ['get', 'principal.html'],
     ],
 
     'controllers' => [
-        '/sendemail' => 'SendEmailController',
+        '/sendemail' => ['post', 'SendEmailController'],
     ],
 
 ];

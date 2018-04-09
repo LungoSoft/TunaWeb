@@ -11,13 +11,35 @@ $routes = include 'config/routes.php';
 
 foreach($routes['views'] as $key => $route)
 {
-    $router->get($key, function() use ($route){
-        include 'views/'.$route;
-    });
+    switch ($route[0]) {
+        case 'get':
+            $router->get($key, function() use ($route){
+                include 'views/'.$route[1];
+            });
+            break;
+        case 'post':
+            $router->post($key, function() use ($route){
+                include 'views/'.$route[1];
+            });
+            break;
+        default:
+            echo 'Error no existe '.$key.' como metodo de ruta!!';
+            break;
+    }
 }
 foreach($routes['controllers'] as $key => $controller)
 {
-    $router->controller($key, 'Tuna\\Http\\Controllers\\'.$controller);
+    switch ($controller[0]) {
+        case 'get':
+            $router->get($key, ['Tuna\\Http\\Controllers\\'.$controller[1], 'send']);
+            break;
+        case 'post':
+            $router->post($key, ['Tuna\\Http\\Controllers\\'.$controller[1], 'send']);
+            break;
+        default:
+            echo 'Error no existe '.$key.' como metodo de ruta!!';
+            break;
+    }
 }
 
 try
