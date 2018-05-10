@@ -6,7 +6,7 @@ return [
     ],
 
     'controllers' => [
-        '/sendemail' => ['post', 'SendEmailController'],
+        '/sendemail' => ['post', 'SendEmailController', 'postIndex'],
     ],
 
 ];

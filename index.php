@@ -31,10 +31,10 @@ foreach($routes['controllers'] as $key => $controller)
 {
     switch ($controller[0]) {
         case 'get':
-            $router->get($key, ['Tuna\\Http\\Controllers\\'.$controller[1], 'send']);
+            $router->get($key, ['Tuna\\Http\\Controllers\\'.$controller[1], $controller[2]]);
             break;
         case 'post':
-            $router->post($key, ['Tuna\\Http\\Controllers\\'.$controller[1], 'send']);
+            $router->post($key, ['Tuna\\Http\\Controllers\\'.$controller[1], $controller[2]]);
             break;
         default:
             echo 'Error no existe '.$key.' como metodo de ruta!!';
