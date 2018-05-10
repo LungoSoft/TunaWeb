@@ -9,7 +9,7 @@ class SendEmail
 {
     public static $config;
 
-    public static function send($to, $subject, $message)
+    public static function send($to, $subject, $message, $nombre = '')
     {
         $mail = new PHPMailer(true);
 
