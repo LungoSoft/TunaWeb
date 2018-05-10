@@ -7,19 +7,19 @@ use Tuna\Email\SendEmail;
 
 $router = new RouteCollector();
 
-$routes = include 'config/routes.php';
+$routes = include getcwd().'/config/routes.php';
 
 foreach($routes['views'] as $key => $route)
 {
     switch ($route[0]) {
         case 'get':
             $router->get($key, function() use ($route){
-                include 'views/'.$route[1];
+                include getcwd().'/views/'.$route[1];
             });
             break;
         case 'post':
             $router->post($key, function() use ($route){
-                include 'views/'.$route[1];
+                include getcwd().'/views/'.$route[1];
             });
             break;
         default:
@@ -44,7 +44,10 @@ foreach($routes['controllers'] as $key => $controller)
 
 try
 {
-    SendEmail::$config = include 'config/mail.php';
+    if(file_exists(getcwd().'/config/mail.php'))
+        SendEmail::$config = include getcwd().'/config/mail.php';
+    else
+        SendEmail::$config = include 'config/mail.php';
 }
 catch(Exception $e)
 {
