@@ -56,7 +56,8 @@ catch(Exception $e)
 
 try
 {
-    $response = (new Dispatcher($router->getData()))->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+    $uri = explode('?', $_SERVER['REQUEST_URI'])[0];
+    $response = (new Dispatcher($router->getData()))->dispatch($_SERVER['REQUEST_METHOD'], $uri);
 }
 catch (Phroute\Phroute\Exception\HttpRouteNotFoundException $ex)
 {
