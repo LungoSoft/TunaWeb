@@ -4,6 +4,7 @@ namespace Tuna\Email;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Tuna\Email\Exceptions\ConfigFileNotExist;
 
 class SendEmail 
 {
@@ -17,20 +18,20 @@ class SendEmail
         $mail->CharSet = 'UTF-8';
 
         //Server settings
-        $mail->SMTPDebug = SendEmail::$config['debug'];
+        $mail->SMTPDebug = static::$config['debug'];
         //$mail->isSMTP();
-        $mail->Host = SendEmail::$config['host'];
-        $mail->SMTPAuth = SendEmail::$config['smtp_auth'];                              // Enable SMTP authentication
-        $mail->Username = SendEmail::$config['username'];                 // SMTP username
-        $mail->Password = SendEmail::$config['password'];                    // SMTP password
-        $mail->SMTPSecure = SendEmail::$config['smtp_secure'];                          // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = SendEmail::$config['port'];                                  // TCP port to connect to
+        $mail->Host = static::$config['host'];
+        $mail->SMTPAuth = static::$config['smtp_auth'];                // Enable SMTP authentication
+        $mail->Username = static::$config['username'];                 // SMTP username
+        $mail->Password = static::$config['password'];                 // SMTP password
+        $mail->SMTPSecure = static::$config['smtp_secure'];            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = static::$config['port'];                         // TCP port to connect to
 
         //Recipients
         if($nombre)
-            $mail->setFrom(SendEmail::$config['email'], $nombre);
+            $mail->setFrom(static::$config['email'], $nombre);
         else
-            $mail->setFrom(SendEmail::$config['email']);
+            $mail->setFrom(static::$config['email']);
         $mail->addAddress($to);     // Add a recipient
 
         //Content
@@ -38,5 +39,13 @@ class SendEmail
         $mail->Subject = $subject;
         $mail->Body = $message;
         $mail->send();
+    }
+
+    public static function init($dir)
+    {
+        if( !file_exists($dir.'/config/mail.php') )
+            throw new ConfigFileNotExist("No exist a $dir/config/mail.php file for config");
+        
+        static::$config = include $dir.'/config/mail.php';
     }
 }
