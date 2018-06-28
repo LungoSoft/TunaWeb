@@ -50,6 +50,6 @@ class RouteFile
         if( !\Tuna\Kernel\App::$dir )
             throw new DirIsNorDefinedException('Base directory where your application located is not defined, define \Tuna\Kernel\App::$dir');
 
-        return include \Tuna\Kernel\App::$dir.'/config/routes.php';
+        return include \Tuna\Kernel\App::$dir.'/'.\Tuna\Kernel\App::$subdomain.'/config/routes.php';
     }
 }

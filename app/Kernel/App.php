@@ -12,6 +12,7 @@ class App
 {
     public static $dir;
     public static $routes;
+    public static $subdomain = '';
 
     public static function create($dir)
     {

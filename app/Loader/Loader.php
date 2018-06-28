@@ -45,7 +45,7 @@ class Loader
 
     private function getView($view)
     {
-        return \Tuna\Kernel\App::$dir.'/views/'.$view;
+        return \Tuna\Kernel\App::$dir.'/'.\Tuna\Kernel\App::$subdomain.'/views/'.$view;
     }
 
     private function getController($controller)
