@@ -19,7 +19,9 @@ class MySqlFormat implements FormatQueryInterface
     {
         switch( $name ) {
             case 'table': $this->query = str_replace("2", $value, $this->query); break;
-            case 'select': $this->query = str_replace("1", $value, $this->query); break;
+            case 'select': 
+                $selects = implode(", ", $value);
+                $this->query = str_replace("1", $selects, $this->query); break;
             case 'where': 
             case 'orWhere': 
                 $comparation = "{$value['first']} {$value['comparation']} {$value['second']}";

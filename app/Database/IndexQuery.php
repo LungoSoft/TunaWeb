@@ -11,7 +11,7 @@ class IndexQuery
     protected $indexes = [];
     protected $parameters = [
         'table' => '',
-        'select' => '',
+        'select' => '...',
         'where' => ['first', 'comparation', 'second'],
         'orWhere' => ['first', 'comparation', 'second'],
         'join' => ['table', 'local_id', 'comparation', 'foreign_id'],
@@ -25,10 +25,23 @@ class IndexQuery
         $this->exception($name);
 
         if( is_string($this->parameters[$name]) ) {
-            if( !is_string($value) )
-                throw new IncorrectValueTypeException("$vale is not a string, string required for index $name");
-            
-            $this->indexes[] = [$name => $value];
+
+            if( $this->parameters[$name] == '...' ) {
+                
+                if( is_array($value) ) {
+                    $this->indexes[] = [$name => $value];
+                } else {
+                    $this->indexes[] = [$name => [$value]];
+                }
+
+            } else {
+                if( !is_string($value) ) {
+                    throw new IncorrectValueTypeException("$vale is not a string, string required for index $name");
+                }
+
+                $this->indexes[] = [$name => $value];
+            }
+
         }
 
         if( is_array($this->parameters[$name]) ) {

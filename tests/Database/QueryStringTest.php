@@ -19,14 +19,14 @@ class QueryStringTest extends TestCase
      */
     public function testSimpleSelectQuery($pdo)
     {
-        $query = Query::table('users')->select('a, b')->__toString();
-        $this->assertEquals('select a, b from users', $query);
+        $query = Query::table('users')->select('*')->__toString();
+        $this->assertEquals('select * from users', $query);
 
         $query = Query::table('users')
-            ->select('domains.*')
+            ->select('domains.*', 'users.name')
             ->join('domains', 'users.domain_id', '=', 'domains.id')
             ->__toString();
-        $this->assertEquals('select domains.* from users join domains on users.domain_id = domains.id', $query);
+        $this->assertEquals('select domains.*, users.name from users join domains on users.domain_id = domains.id', $query);
 
         $query = Query::table('users')
             ->select('domains.*')

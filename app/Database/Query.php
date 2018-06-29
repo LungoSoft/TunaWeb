@@ -33,11 +33,15 @@ class Query
             $params = $this->attributes->getParameters($name);
             $nArgs = count($params);
 
-            if( $nArgs != count($arguments) ) {
+            if( $params != '...' && $nArgs != count($arguments) ) {
                 throw new IncorrectNumberOfArgumentsException("Invalid number of arguments for $name function, must be $nArgs");
             }
 
-            $result = array_combine($params, $arguments);
+            if( $params == '...' ) {
+                $result = $arguments;
+            } else {
+                $result = array_combine($params, $arguments);
+            }
 
             $this->attributes->addArrgument($name, $result);
         }
