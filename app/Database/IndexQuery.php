@@ -12,6 +12,7 @@ class IndexQuery
     protected $parameters = [
         'table' => '',
         'select' => '...',
+        'insert' => ['first', 'second'],
         'set' => ['first', 'comparation', 'second'],
         'where' => ['first', 'comparation', 'second'],
         'orWhere' => ['first', 'comparation', 'second'],

@@ -11,6 +11,7 @@ class MySqlFormat implements FormatQueryInterface
     protected $set;
     protected $where;
     protected $joins;
+    protected $insert;
 
     public function start()
     {
@@ -19,12 +20,22 @@ class MySqlFormat implements FormatQueryInterface
         $this->where = "";
         $this->joins = "";
         $this->set = "";
+        $this->insert = [];
     }
 
     public function add($name, $value)
     {
         switch( $name ) {
             case 'table': $this->table = $value; break;
+            case 'insert': 
+                if( !$this->insert ) {
+                    $this->insert[0] = $value['first'];
+                    $this->insert[1] = $value['second'];
+                } else {
+                    $this->insert[0] .= ', '.$value['first'];
+                    $this->insert[1] .= ', '.$value['second'];
+                }
+                break;
             case 'select': $this->select = implode(", ", $value); break;
             case 'set': 
                 $comparation = "{$value['first']} {$value['comparation']} {$value['second']}";
@@ -57,11 +68,16 @@ class MySqlFormat implements FormatQueryInterface
 
     public function end()
     {
-        if( $this->set && $this->select ) {
-            throw new InvalidQueryException("You can't use select and set at the same time");
+        if( $this->set && ($this->select || $this->joins) ) {
+            throw new InvalidQueryException("You can't use select or joins with set statement at the same time");
         }
-        if( $this->set && $this->joins ) {
+        if( $this->insert && ($this->joins || $this->select || $this->where || $this->set) ) {
             throw new InvalidQueryException("You can't use joins and set at the same time");
+        }
+
+        if( $this->insert ) {
+            $this->query = 'insert into '.$this->table.'('.$this->insert[0].') values('.$this->insert[1].')';
+            return;
         }
 
         if( !$this->select ) {

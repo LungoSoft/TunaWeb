@@ -24,8 +24,20 @@ class QueryStringTest extends TestCase
         $this->assertEquals('select * from users', $query);
 
         $query = Query::table('users')
-            ->set('name', '=', '12')->
-            __toString();
+            ->insert('name', 'pablo')
+            ->__toString();
+        $this->assertEquals('insert into users(name) values(pablo)', $query);
+
+        $query = Query::table('users')
+            ->insert('name', 'pablo')
+            ->insert('company', 'lorem')
+            ->insert('username', 'pablito')
+            ->__toString();
+        $this->assertEquals('insert into users(name, company, username) values(pablo, lorem, pablito)', $query);
+
+        $query = Query::table('users')
+            ->set('name', '=', '12')
+            ->__toString();
         $this->assertEquals('update users set name = 12', $query);
 
         $query = Query::table('users')
