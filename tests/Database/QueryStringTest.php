@@ -19,8 +19,27 @@ class QueryStringTest extends TestCase
      */
     public function testSimpleSelectQuery($pdo)
     {
-        $query = Query::table('users')->select('*')->__toString();
+        $query = Query::table('users')
+            ->__toString();
         $this->assertEquals('select * from users', $query);
+
+        $query = Query::table('users')
+            ->set('name', '=', '12')->
+            __toString();
+        $this->assertEquals('update users set name = 12', $query);
+
+        $query = Query::table('users')
+            ->set('name', '=', '12')
+            ->set('username', '=', 'user')
+            ->__toString();
+        $this->assertEquals('update users set name = 12, username = user', $query);
+
+        $query = Query::table('users')
+            ->set('name', '=', '12')
+            ->set('username', '=', 'user')
+            ->where('name', '<=', 'test')
+            ->__toString();
+        $this->assertEquals('update users set name = 12, username = user where name <= test', $query);
 
         $query = Query::table('users')
             ->select('domains.*', 'users.name')

@@ -2,26 +2,38 @@
 
 namespace Tuna\Database\Format;
 
+use Tuna\Database\Exceptions\InvalidQueryException;
+
 class MySqlFormat implements FormatQueryInterface
 {
-    protected $query;
+    protected $table;
+    protected $select;
+    protected $set;
     protected $where;
     protected $joins;
 
     public function start()
     {
-        $this->query = "select 1 from 2";
+        $this->table = "";
+        $this->select = "";
         $this->where = "";
         $this->joins = "";
+        $this->set = "";
     }
 
     public function add($name, $value)
     {
         switch( $name ) {
-            case 'table': $this->query = str_replace("2", $value, $this->query); break;
-            case 'select': 
-                $selects = implode(", ", $value);
-                $this->query = str_replace("1", $selects, $this->query); break;
+            case 'table': $this->table = $value; break;
+            case 'select': $this->select = implode(", ", $value); break;
+            case 'set': 
+                $comparation = "{$value['first']} {$value['comparation']} {$value['second']}";
+                if( !$this->set ) {
+                    $this->set .= "set $comparation";
+                } else {
+                    $this->set .= ", $comparation";
+                }
+                break;
             case 'where': 
             case 'orWhere': 
                 $comparation = "{$value['first']} {$value['comparation']} {$value['second']}";
@@ -45,7 +57,29 @@ class MySqlFormat implements FormatQueryInterface
 
     public function end()
     {
-        $this->query .= ' '.trim($this->joins).' '.trim($this->where);
+        if( $this->set && $this->select ) {
+            throw new InvalidQueryException("You can't use select and set at the same time");
+        }
+        if( $this->set && $this->joins ) {
+            throw new InvalidQueryException("You can't use joins and set at the same time");
+        }
+
+        if( !$this->select ) {
+            $this->select = "*";
+        }
+
+        if ($this->set ) {
+            $this->query = 'update '.trim($this->table).' '.trim($this->set);
+        } else {
+            $this->query = 'select '.trim($this->select).' from '.trim($this->table);
+        }
+
+        if( $this->joins ) {
+            $this->query .= ' '.trim($this->joins);
+        }
+        if( $this->where ) {
+            $this->query .= ' '.trim($this->where);
+        }
     }
 
     public function generate()
