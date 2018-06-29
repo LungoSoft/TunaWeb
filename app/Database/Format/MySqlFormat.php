@@ -7,6 +7,7 @@ use Tuna\Database\Exceptions\InvalidQueryException;
 class MySqlFormat implements FormatQueryInterface
 {
     protected $table;
+    protected $delete;
     protected $select;
     protected $set;
     protected $where;
@@ -16,6 +17,7 @@ class MySqlFormat implements FormatQueryInterface
     public function start()
     {
         $this->table = "";
+        $this->delete = "";
         $this->select = "";
         $this->where = "";
         $this->joins = "";
@@ -26,7 +28,8 @@ class MySqlFormat implements FormatQueryInterface
     public function add($name, $value)
     {
         switch( $name ) {
-            case 'table': $this->table = $value; break;
+            case 'table': $this->table = trim($value); break;
+            case 'delete': $this->delete = 'd'; break;
             case 'insert': 
                 if( !$this->insert ) {
                     $this->insert[0] = $value['first'];
@@ -72,24 +75,41 @@ class MySqlFormat implements FormatQueryInterface
             throw new InvalidQueryException("You can't use select or joins with set statement at the same time");
         }
         if( $this->insert && ($this->joins || $this->select || $this->where || $this->set) ) {
-            throw new InvalidQueryException("You can't use joins and set at the same time");
+            throw new InvalidQueryException("You can't use joins, select, where or set with insert statement at the same time");
+        }
+        if( $this->delete && ($this->joins || $this->select || $this->set) ) {
+            throw new InvalidQueryException("You can't use joins, select or set with delete statement at the same time");
         }
 
+        //create a insert statement if exists
         if( $this->insert ) {
             $this->query = 'insert into '.$this->table.'('.$this->insert[0].') values('.$this->insert[1].')';
             return;
         }
 
+        //create a delete statement if exists
+        if( $this->delete ) {
+            $this->query = 'delete from '.$this->table;
+            if( $this->where ) {
+                $this->query .= ' '.trim($this->where);
+            }
+            return;
+        }
+
+        //create a update statement if exists
+        if ($this->set ) {
+            $this->query = 'update '.$this->table.' '.trim($this->set);
+            if( $this->where ) {
+                $this->query .= ' '.trim($this->where);
+            }
+            return;
+        }
+
+        //create a select statement
         if( !$this->select ) {
             $this->select = "*";
         }
-
-        if ($this->set ) {
-            $this->query = 'update '.trim($this->table).' '.trim($this->set);
-        } else {
-            $this->query = 'select '.trim($this->select).' from '.trim($this->table);
-        }
-
+        $this->query = 'select '.trim($this->select).' from '.$this->table;
         if( $this->joins ) {
             $this->query .= ' '.trim($this->joins);
         }

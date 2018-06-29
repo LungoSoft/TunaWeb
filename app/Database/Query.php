@@ -27,6 +27,11 @@ class Query
             throw new \Exception("You cant use table property again");
         }
 
+        if( count($arguments) == 0) {
+            $this->attributes->addArrgument($name);
+            return $this;
+        }
+
         if( count($arguments) == 1) {
             $this->attributes->addArrgument($name, $arguments[0]);
         } else {

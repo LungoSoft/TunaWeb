@@ -24,6 +24,17 @@ class QueryStringTest extends TestCase
         $this->assertEquals('select * from users', $query);
 
         $query = Query::table('users')
+            ->delete()
+            ->__toString();
+        $this->assertEquals('delete from users', $query);
+
+        $query = Query::table('users')
+            ->delete()
+            ->where('a', '=', 'b')
+            ->__toString();
+        $this->assertEquals('delete from users where a = b', $query);
+
+        $query = Query::table('users')
             ->insert('name', 'pablo')
             ->__toString();
         $this->assertEquals('insert into users(name) values(pablo)', $query);

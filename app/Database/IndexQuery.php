@@ -13,6 +13,7 @@ class IndexQuery
         'table' => '',
         'select' => '...',
         'insert' => ['first', 'second'],
+        'delete' => 'null',
         'set' => ['first', 'comparation', 'second'],
         'where' => ['first', 'comparation', 'second'],
         'orWhere' => ['first', 'comparation', 'second'],
@@ -22,9 +23,13 @@ class IndexQuery
         'innerJoin' => ['table', 'local_id', 'comparation', 'foreign_id'],
     ];
 
-    public function addArrgument($name, $value)
+    public function addArrgument($name, $value = '')
     {
         $this->exception($name);
+
+        if( $this->parameters[$name] === 'null' ) {
+            $this->indexes[] = [$name => $value];
+        }
 
         if( is_string($this->parameters[$name]) ) {
 
