@@ -76,10 +76,29 @@ class Query
         return $this->format->generate();
     }
 
-    public function get()
+    public function get($array = [])
     {
         $str = $this->__toString();
-        return Connect::instance()->execute($str);
+
+        $stmt = Connect::instance()->prepare($str);
+        if( count($array) ) {
+            $stmt->execute($array);
+        } else {
+            $stmt->execute();
+        }
+
+        if( substr($str, 0, 6) == 'insert' ) { 
+            return Connect::instance()->lastInsertId();
+        }
+        
+        if( substr($str, 0, 6) == 'select' ) {
+            $res = $stmt->fetchAll(\PDO::FETCH_OBJ);
+            if( count($res) == 1 ) {
+                return $res[0];
+            } else {
+                return $res;
+            }
+        }
     }
 
     public static function table($name)
@@ -88,5 +107,16 @@ class Query
         $format = new MySqlFormat();
         $qry = new Query($attributes, $format, $name);
         return $qry;
+    }
+
+    public static function transaction($callback) {
+        Connect::instance()->beginTransaction();
+        $res = $callback();
+
+        if( $res ) {
+            Connect::instance()->commit();
+        } else {
+            Connect::instance()->rollBack();
+        }
     }
 }

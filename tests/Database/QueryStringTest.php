@@ -6,18 +6,7 @@ use Tuna\Database\Query;
 
 class QueryStringTest extends TestCase
 {
-    public function testDatabaseIsConnected()
-    {
-        $pdo = Connect::instance();
-        $this->assertNotNull($pdo);
-
-        return $pdo;
-    }
-
-    /**
-     * @depends testDatabaseIsConnected
-     */
-    public function testSimpleSelectQuery($pdo)
+    public function testSimpleSelectQuery()
     {
         $query = Query::table('users')
             ->__toString();

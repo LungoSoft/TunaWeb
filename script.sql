@@ -1,6 +1,11 @@
+drop table if exists paragraphs;
+drop table if exists users;
+drop table if exists domains;
+
 CREATE TABLE domains(
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL,
+    principal BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE users(
@@ -12,7 +17,7 @@ CREATE TABLE users(
     FOREIGN KEY (domain_id) REFERENCES domains(id) ON DELETE CASCADE
 );
 
-CREATE TABLE paragraph(
+CREATE TABLE paragraphs(
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(20) NOT NULL,
     content TEXT NOT NULL,

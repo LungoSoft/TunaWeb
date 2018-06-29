@@ -14,7 +14,7 @@ class App
     public static $routes;
     public static $subdomain = '';
 
-    public static function create($dir)
+    public static function create($dir, $test = false)
     {
         //change dir project
         \Tuna\Kernel\App::$dir = $dir;
